@@ -1,14 +1,14 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "Node.js backend for e-commerce app",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "echo \"Skipping test script\" && exit 0"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "Mahfuj Alam Rony",
+  "author": "",
   "license": "ISC",
   "dependencies": {
     "@azure/storage-blob": "^12.27.0",

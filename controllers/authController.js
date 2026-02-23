@@ -437,6 +437,78 @@ exports.checkTokenValidAndResetLocalStorage = async (req, res) => {
   }
 };
 
+exports.getMyProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).select(
+      'name email imgUrl role phone city country gender dateOfBirth _id'
+    );
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    return res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: 'Failed to load profile', error: error.message });
+  }
+};
+
+exports.updateMyProfile = async (req, res) => {
+  try {
+    const allowedFields = ['name', 'imgUrl', 'phone', 'city', 'country', 'gender', 'dateOfBirth'];
+    const updates = {};
+
+    for (const field of allowedFields) {
+      if (Object.prototype.hasOwnProperty.call(req.body, field)) {
+        updates[field] = req.body[field] ?? '';
+      }
+    }
+
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    Object.assign(user, updates);
+    await user.save();
+
+    const token = jwt.sign(
+      {
+        name: user.name,
+        userId: user._id,
+        email: user.email,
+        imgUrl: user.imgUrl,
+        role: user.role,
+      },
+      process.env.JWT_SECRET || 'yourSecretKey',
+      { expiresIn: '7d' }
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: 'Profile updated successfully',
+      token,
+      user: {
+        _id: user._id,
+        name: user.name || '',
+        email: user.email || '',
+        imgUrl: user.imgUrl || '',
+        role: user.role || 'user',
+        phone: user.phone || '',
+        city: user.city || '',
+        country: user.country || '',
+        gender: user.gender || '',
+        dateOfBirth: user.dateOfBirth || '',
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({ message: 'Failed to update profile', error: error.message });
+  }
+};
+
 
 // change password
 exports.changePassword = async(req, res) => {

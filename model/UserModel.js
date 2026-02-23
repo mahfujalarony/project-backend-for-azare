@@ -6,6 +6,11 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: false }, // গুগল লগইনের জন্য false করা হয়েছে
   imgUrl: { type: String, required: false },
+  phone: { type: String, required: false, default: '' },
+  city: { type: String, required: false, default: '' },
+  country: { type: String, required: false, default: '' },
+  gender: { type: String, required: false, default: '' },
+  dateOfBirth: { type: String, required: false, default: '' },
   role: { 
     type: String, 
     enum: ['user', 'admin'], 

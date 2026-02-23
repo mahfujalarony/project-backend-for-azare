@@ -25,7 +25,6 @@ const conversationSchema = new mongoose.Schema({
   },
 });
 
-conversationSchema.index({ chatId: 1 });
 conversationSchema.index({ productId: 1, createdBy: 1 }, { unique: true });
 
 module.exports = mongoose.model('Conversation', conversationSchema);
